@@ -17,6 +17,7 @@ playstore.drop_duplicates(subset =["App"], keep = 'first', inplace=True)
 playstore.drop([10472], inplace=True)
 
 # Cek tipe data kolom Category. Jika masih tersimpan dengan format tipe data yang salah, ubah ke tipe data yang sesuai
+#playstore.dtypes
 playstore.Category = playstore.Category.astype('category')
 
 # Pada kolom Installs Buang tanda koma(,) dan tanda tambah(+) kemudian ubah tipe data menjadi integer
@@ -78,12 +79,21 @@ def index():
     ## Buatlah bar plot dimana axis x adalah nama Category
     ## dan axis y adalah jumlah aplikasi pada setiap kategori, kemudian urutkan dari jumlah terbanyak
    
-    cat_order = df2.groupby('Category').agg({
-     'App' : 'count'
-    }).reset_index().rename({'App':'Total'}, axis=1).sort_values('Total',ascending=False).head()
+    #versi 1
+    #cat_order = df2.groupby('Category').agg({
+    # 'App' : 'count'
+    #}).reset_index().rename({'App':'Total'}, axis=1).sort_values('Total',ascending=False).head()
     
-    X = cat_order['Category']
-    Y = cat_order['Total']
+    #X = cat_order['Category']
+    #Y = cat_order['Total']
+    
+    #versi 2
+    cat_order = df2.reset_index().groupby(['Category']).agg({
+     'Category' : 'count'
+    }).rename({'Category':'Total'}, axis=1).sort_values('Total',ascending=False).head()
+    
+    X = cat_order.index
+    Y = cat_order.Total
     
     my_colors = 'rgbkymc'
     # bagian ini digunakan untuk membuat kanvas/figure
